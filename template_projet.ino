@@ -10,6 +10,8 @@ int BH1750address = 0x23;
 const char* ssid = "iPhone (29)";
 const char* password = "ABCDZFGH";
 const char* mqtt_server = "mqtt.ci-ciad.utbm.fr";
+
+
 WiFiClient espClientAir; // Initialiser la bibliothèque client wifi (connexion WiFi)
 PubSubClient clientAir(espClientAir); // Créer un objet client MQTT (connexion MQTT)
 long lastMsg = 0;
@@ -22,6 +24,7 @@ void setup() {
   myOLED.begin();
   Wire.begin();
   Serial.begin(57600);//init Serail band rate
+
   if (!bme.begin(0x76)) {
       Serial.println("Could not find a valid BME280 sensor, check wiring!");
       while (1);
@@ -40,6 +43,7 @@ void setup() {
   
   clientAir.setCallback(callback); // définit la fonction callback comme la fonction à appeler lorsqu'un message MQTT est reçu.
 }
+
 
 /** @brief Cette fonction se connecte au réseau WiFi en utilisant les paramètres de connexion fournis dans les variables ssid et password.
 **/
@@ -77,7 +81,7 @@ void setup() {
   
   // Le message reçu est transmis à la fonction en tant que tableau de bytes "message" avec une longueur "length". 
   //Pour pouvoir travailler avec ce message dans le reste du code, nous devons d'abord le convertir en chaîne de caractères.
-  String messageTemp; // déclare une variable de chaîne temporaire pour stocker le message reçu.
+  String messageTemp;
   
   // boucle sur chaque élement dans le tableau de bytes "message" et les ajoute à la chaîne "messageTemp".
   for (int i = 0; i < length; i++) {

@@ -10,5 +10,10 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BME280.h>
 #include <Adafruit_CCS811.h>
+
+
 void UpdateOLED();
+void getBM280Data(float bmData[]);
+void getCSS811Data(float cssData);
+uint16_t getLuxData();
 #endif //PROJETIF3B_MESUR_CAPTEURS_H
