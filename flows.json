@@ -1,0 +1,301 @@
+[
+    {
+        "id": "139d1321e39413f1",
+        "type": "tab",
+        "label": "Flux 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "6ecfec5ca9e4a71d",
+        "type": "mqtt in",
+        "z": "139d1321e39413f1",
+        "name": "",
+        "topic": "esp32/KlitéAir",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "a90e7f38bd90f9a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 230,
+        "y": 60,
+        "wires": [
+            [
+                "6324af869cae81c3"
+            ]
+        ]
+    },
+    {
+        "id": "6324af869cae81c3",
+        "type": "ui_led",
+        "z": "139d1321e39413f1",
+        "order": 0,
+        "group": "a54b25374eb90119",
+        "width": 0,
+        "height": 0,
+        "label": "",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#ff0000",
+                "value": "on",
+                "valueType": "str"
+            },
+            {
+                "color": "#008000",
+                "value": "off",
+                "valueType": "str"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "showGlow": true,
+        "name": "",
+        "x": 410,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "09a42745e908722b",
+        "type": "mqtt in",
+        "z": "139d1321e39413f1",
+        "name": "",
+        "topic": "esp32/bmp280/temperature",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "a90e7f38bd90f9a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 300,
+        "y": 220,
+        "wires": [
+            [
+                "ac3d257714f8aacf"
+            ]
+        ]
+    },
+    {
+        "id": "900e3638ea76d6ee",
+        "type": "mqtt in",
+        "z": "139d1321e39413f1",
+        "name": "",
+        "topic": "esp32/bmp280/pression",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "a90e7f38bd90f9a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 280,
+        "y": 260,
+        "wires": [
+            [
+                "b96280ae73c40b9a"
+            ]
+        ]
+    },
+    {
+        "id": "ed95f16e364012de",
+        "type": "mqtt in",
+        "z": "139d1321e39413f1",
+        "name": "",
+        "topic": "esp32/bmp280/hauteur",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "a90e7f38bd90f9a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 280,
+        "y": 300,
+        "wires": [
+            [
+                "77eefbb5ad8a1144"
+            ]
+        ]
+    },
+    {
+        "id": "ac3d257714f8aacf",
+        "type": "ui_gauge",
+        "z": "139d1321e39413f1",
+        "name": "",
+        "group": "a54b25374eb90119",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Temperature",
+        "label": "°C",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "40",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 530,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "b96280ae73c40b9a",
+        "type": "ui_gauge",
+        "z": "139d1321e39413f1",
+        "name": "",
+        "group": "a54b25374eb90119",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Pression",
+        "label": "HPa",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "1100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 520,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "77eefbb5ad8a1144",
+        "type": "ui_gauge",
+        "z": "139d1321e39413f1",
+        "name": "",
+        "group": "a54b25374eb90119",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Hauteur",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "5000",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 520,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "bec7d62d6807064e",
+        "type": "mqtt in",
+        "z": "139d1321e39413f1",
+        "name": "",
+        "topic": "esp32/lux5",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "a90e7f38bd90f9a9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 240,
+        "y": 360,
+        "wires": [
+            [
+                "8debd9d1df15fbe9"
+            ]
+        ]
+    },
+    {
+        "id": "8debd9d1df15fbe9",
+        "type": "ui_text",
+        "z": "139d1321e39413f1",
+        "group": "a54b25374eb90119",
+        "order": 4,
+        "width": "4",
+        "height": "4",
+        "name": "",
+        "label": "Jour/Nuit",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 500,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "a90e7f38bd90f9a9",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "mqtt.ci-ciad.utbm.fr",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "5",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "a54b25374eb90119",
+        "type": "ui_group",
+        "name": "BMP280",
+        "tab": "02211714844374ec",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "02211714844374ec",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard-ledapplication",
+        "disabled": false,
+        "hidden": false
+    }
+]
