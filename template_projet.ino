@@ -1,11 +1,16 @@
 #include <WiFi.h> // Cette bibliothèque permet à l'ESP32 de se connecter au réseau WiFi.
 #include <PubSubClient.h> // Cette bibliothèque vous permet d'envoyer et de recevoir des messages MQTT.
-#include "mesure_capteurs.ino"
+#include "mesure_capteurs.h"
+#define Largeur 128         
+#define Hauteur 64        
+#define brocheReset  -1     
+#define adresseI2C   0x3C
 #define EARTHPRESSUR (1013.25)
 
-OLED myOLED(SDA, SCL, 8);
-Adafruit_BME280 bme;
+Adafruit_SSD1306 oled(Largeur,Hauteur, &Wire, adresseI2C);
+Adafruit_BMP280 bmp;
 Adafruit_CCS811 ccs;
+
 int BH1750address = 0x23;
 const char* ssid = "iPhone (29)";
 const char* password = "ABCDZFGH";
@@ -21,19 +26,32 @@ long lastMsg = 0;
 void setup() {
   Serial.begin(9600);
 
-  myOLED.begin();
-  Wire.begin();
-  Serial.begin(57600);//init Serail band rate
-
-  if (!bme.begin(0x76)) {
-      Serial.println("Could not find a valid BME280 sensor, check wiring!");
-      while (1);
+  if(!oled.begin(SSD1306_SWITCHCAPVCC,adresseI2C);){
+    Serial.println("Erreur de communication");
   }
-    if(!ccs.begin()){
-        Serial.println("Could not find a valid CCS811 sensor, check wiring!");
-        while(1);
-    }
-    while(!ccs.available());
+  else{
+    Serial.println("Initialisation du SSD1306 réussi ! ");
+  }
+
+  // ccs811 setup
+  if(!ccs.begin()){
+    Serial.println("Failed to start sensor! Please check your wiring.");
+    while(1);
+  }
+  while(!ccs.available());
+
+  //  bmp280 setup
+  if (!bmp.begin()) {
+    Serial.println("Could not find a valid BMP280 sensor, check wiring!");
+    while (1);
+  }
+  Serial.println(F("Reading BMP280 : "));
+
+  // luxmetre setup
+  Wire.begin();
+  Wire.beginTransmission(BH1750address);
+  Wire.write(0x10);//1lx reolution 120ms
+  Wire.endTransmission();
 
   delay(2000); // Donnez-moi le temps de mettre en place le moniteur série
   Serial.println("ESP32 Button Test");
