@@ -2,7 +2,7 @@
 /* @brief
 *
 */
-void UpdateOLED(float Temp,float Hum,uint16_t co2,float pression,float lux){
+void UpdateOLED(float Temp,float Hum,uint16_t co2,uint16_t tvoc,float pression,float lux){
     oled.clearDisplay();
     oled.setTextSize(2);
     oled.print("Temperature : ");
@@ -25,15 +25,39 @@ void UpdateOLED(float Temp,float Hum,uint16_t co2,float pression,float lux){
     else{
       oled.println("Correct");
     }
+    oled.print("Taux Tvoc : ");
+    if(tvoc>500){
+      oled.println("Dangereux");
+    }
+    else{
+      oled.println("Correct");
+    }
     oled.display();
 }
-uint16_t getCSS811Data(){
+uint16_t getCO2Data(){
     if(ccs.available()){
       if(!ccs.readData()){ 
         uint16_t co2=ccs.geteCo2();
         Serial.print("CO2");
         Serial.print(co2);
         return co2;
+      }
+      else{
+        Serial.println("Error");
+      }
+    }
+    else{
+      Serial.println("Error ccs unavailable ");
+    }
+    return 0;
+}
+uint16_t getTVOCData(){
+    if(ccs.available()){
+      if(!ccs.readData()){ 
+        uint16_t tvoc=ccs.geteTvoc();
+        Serial.print("TVOC");
+        Serial.print(tvoc);
+        return tvoc;
       }
       else{
         Serial.println("Error");
@@ -71,4 +95,3 @@ uint16_t getLuxData(){
     }
     return 0;
 }
-

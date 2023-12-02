@@ -7,25 +7,35 @@
 #define adresseI2C   0x3C
 #define EARTHPRESSUR (1013.25)
 
-Adafruit_SSD1306 oled(Largeur,Hauteur, &Wire, adresseI2C);
 Adafruit_BMP280 bmp;
 Adafruit_CCS811 ccs;
+Adafruit_SSD1306 oled(Largeur,Hauteur, &Wire, adresseI2C);
 
-int BH1750address = 0x23;
 const char* ssid = "iPhone (29)";
 const char* password = "ABCDZFGH";
 const char* mqtt_server = "mqtt.ci-ciad.utbm.fr";
-
+int BH1750address = 0x23; //setting i2c address
+float pressure,temp;
 
 WiFiClient espClientAir; // Initialiser la bibliothèque client wifi (connexion WiFi)
 PubSubClient clientAir(espClientAir); // Créer un objet client MQTT (connexion MQTT)
 long lastMsg = 0;
+long lastMesure=0;
 
+
+
+
+uint16_t tvoc_value=0;
+uint16_t co2_value=0;
+float hum_value=0.0;
+float lux_value=0.0;
+float pressure_value=0.0;
+float temp_value=0.0;
 /**@brief Cette fonction initialise les paramètres pour la connexion WiFi et MQTT, configure le mode d'entrée et de sortie pour les broches de bouton et de LED, et démarre la communication série.
  **/
 void setup() {
   Serial.begin(9600);
-
+  // oled i2C setup
   if(!oled.begin(SSD1306_SWITCHCAPVCC,adresseI2C);){
     Serial.println("Erreur de communication");
   }
@@ -52,10 +62,9 @@ void setup() {
   Wire.beginTransmission(BH1750address);
   Wire.write(0x10);//1lx reolution 120ms
   Wire.endTransmission();
-
+  
   delay(2000); // Donnez-moi le temps de mettre en place le moniteur série
   Serial.println("ESP32 Button Test");
-
   setup_wifi(); // Cette ligne appelle la fonction setup_wifi() pour configurer la connexion Wi-Fi sur l'ESP32.
   clientAir.setServer(mqtt_server, 1883); //définit le serveur (broker) MQTT à utiliser pour la communication et le port de communication à 1883, qui est le port standard pour MQTT.
   
@@ -158,14 +167,18 @@ void loop() {
   clientAir.loop(); // La méthode client.loop() est appelée pour traiter les messages MQTT entrants.
 				// Maintient la connexion avec le serveur MQTT en vérifiant si de nouveaux messages sont arrivés et en envoyant les messages en attente.
   
-  //La dernière partie vérifie le temps écoulé depuis le dernier message publié et n'envoie le prochain message que toutes les 2 secondes (2000 millisecondes).
-  long now = millis(); // Crée une variable "now" pour stocker le nombre de millisecondes écoulées depuis le démarrage du programme.
-  if (now - lastMsg > 2000) { // Vérifie si le temps écoulé depuis le dernier message publié est supérieur à 2000 millisecondes.
-		lastMsg = now; // Si oui, met à jour la variable "lastMsg" avec la valeur actuelle de "now".
-		
-		/*
-        Code à remplir
-    */
-		
+  // timer pour effectuer les mesure ( de base 5 minutes)
+  long now = millis();
+  if (now - lastMsg > 2000) {
+		lastMsg = now;
+    // mesure + affichage sur l'ecran oled
+		getBM280Data(&pressure_value,&temp_value,&hum_value);
+    co2_value= getC02Data();  
+    tvoc_value= getTVOCData();
+    lux_value=getLuxData();
+    UpdateOLED(temp_value,hum_value,co2_value,tvoc_value,pressure_value,lux_value);	
+
+    //publication des valeurs sur node-red
+    clientAir.publish()
   }
 }
