@@ -64,7 +64,6 @@ void setup() {
   Wire.endTransmission();
   
   delay(2000); // Donnez-moi le temps de mettre en place le moniteur série
-  Serial.println("ESP32 Button Test");
   setup_wifi(); // Cette ligne appelle la fonction setup_wifi() pour configurer la connexion Wi-Fi sur l'ESP32.
   clientAir.setServer(mqtt_server, 1883); //définit le serveur (broker) MQTT à utiliser pour la communication et le port de communication à 1883, qui est le port standard pour MQTT.
   
@@ -143,7 +142,12 @@ void setup() {
     if (clientAir.connect("espClientAir")) {
       Serial.println("connected");
       // Subscribe
-      clientAir.subscribe("esp32/ledAir");
+      clientAir.subscribe("esp32/bmp280/temperature");
+      clientAir.subscribe("esp32/bmp280/pression");
+      clientAir.subscribe("esp32/bmp280/hauteur");
+      clientAir.subscribe("esp32/css811/luminositePiece");
+      clientAir.subscribe("esp32/css811/qualiteCO2");
+      clientAir.subscribe("esp32/css811/qualiteTVOC");
     } 
 	// Si la connexion échoue, le code imprime "failed, rc=" suivi de l'état de la connexion avec "client.state()" sur la console série 
    // La fonction se répète jusqu'à ce que la connexion soit établie avec succès.
@@ -179,6 +183,11 @@ void loop() {
     UpdateOLED(temp_value,hum_value,co2_value,tvoc_value,pressure_value,lux_value);	
 
     //publication des valeurs sur node-red
-    clientAir.publish()
+      clientAir.publish("esp32/bmp280/temperature");
+      clientAir.publish("esp32/bmp280/pression");
+      clientAir.publish("esp32/bmp280/hauteur");
+      clientAir.publish("esp32/css811/luminositePiece");
+      clientAir.publish("esp32/css811/qualiteCO2");
+      clientAir.publish("esp32/css811/qualiteTVOC");
   }
 }
