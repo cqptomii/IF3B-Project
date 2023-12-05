@@ -9,8 +9,11 @@
 #define brocheReset  -1     
 #define adresseI2C 0x3C
 #define EARTHPRESSUR (1013.25)
+
 #define bLed_pin 18
+#define ventil_pin 18
 #define bLux_pin 21
+
 float pressure=0,temp=0;
 int tvoc_value=0;
 int co2_value=0;
@@ -50,7 +53,8 @@ void setup() {
 
   // Led setup
   pinMode(bLed_pin,OUTPUT);
-
+  // ventil setup
+  pinMode(ventil_pin,OUTPUT);
   delay(2000); 
   setup_wifi(); 
   clientAir.setServer(mqtt_server, 1883); 
@@ -207,8 +211,9 @@ void UpdateOLED(float Temp,float Hum,int co2,int tvoc,float pression,float lux){
     }
     oled.display();
 }
-void init_ventile(){
+void init_ventile(int valeur){
+  analogWrite(ventil_pin,valeur);
 }
 void end_ventile(){
-  
+  analogWrite(ventil_pin,0);
 }
