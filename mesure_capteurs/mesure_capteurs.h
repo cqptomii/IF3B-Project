@@ -13,5 +13,5 @@
 void getBM280Data(float *pressure,float *temp);
 int getCO2Data();
 int getTVOCData();
-int getLuxData();
+float getLuxData();
 #endif //PROJETIF3B_MESUR_CAPTEURS_H

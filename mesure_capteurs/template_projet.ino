@@ -9,7 +9,8 @@
 #define brocheReset  -1     
 #define adresseI2C 0x3C
 #define EARTHPRESSUR (1013.25)
-
+#define bLed_pin 18
+#define bLux_pin 21
 float pressure=0,temp=0;
 int tvoc_value=0;
 int co2_value=0;
@@ -45,11 +46,11 @@ void setup() {
   oled.display();
 
   // luxmetre setup
-  Wire.begin();
-  Wire.beginTransmission(BH1750address);
-  Wire.write(0x10);//1lx reolution 120ms
-  Wire.endTransmission();
-  
+  pinMode(bLux_pin,INPUT);
+
+  // Led setup
+  pinMode(bLed_pin,OUTPUT);
+
   delay(2000); 
   setup_wifi(); 
   clientAir.setServer(mqtt_server, 1883); 
@@ -167,10 +168,9 @@ void loop() {
     co2_value=getCO2Data();
     tvoc_value=getTVOCData();
     //Mesure luxmetre
-
+    lux_value= getLuxData();
     //Affichage oled
     UpdateOLED(temp_value,hum_value,co2_value,tvoc_value,pressure_value,lux_value);	
-
     //publication des valeurs sur node-red
   }
 }
@@ -206,4 +206,9 @@ void UpdateOLED(float Temp,float Hum,int co2,int tvoc,float pression,float lux){
       oled.println("Correct");
     }
     oled.display();
+}
+void init_ventile(){
+}
+void end_ventile(){
+  
 }

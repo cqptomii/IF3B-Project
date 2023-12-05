@@ -2,10 +2,11 @@
 /* @brief
 *
 */
+#define bLux_pin 21
 Adafruit_BMP280 bmp;
 Adafruit_CCS811 ccs;
 int BH1750address = 0x23; //setting i2c address
-byte buff[2];
+byte LuxData[2];
 int getTVOCData(){
     if(ccs.available()){
       if(!ccs.readData()){ 
@@ -52,24 +53,17 @@ void getBM280Data(float *pressure,float *temp){
   Serial.println(F(" °C"));
   Serial.print(F("humidité: "));
 }
-int getLuxData(){
+float getLuxData(){
     int i=0;int val;
-    byte LuxData[2];
     
-    Wire.beginTransmission(BH1750address);
-    Wire.requestFrom(BH1750address, 2);
-    while(Wire.available()) //
-    {
-        LuxData[i] = Wire.read();  // receive one byte
-        i++;
+    unsigned int A0_value= analogRead(bLux_pin);
+    if(A0_value){
+        float voltage= A0_value *(5/1023);
+	      float current= voltage*K*pow(10,6);
+        float Light= current/0.075;
+        return Light;
     }
-    Wire.endTransmission();
-
-    if(i==2){
-        val=((buff[0]<<8)|buff[1])/1.2;
-        Serial.print(val,DEC);
-        Serial.println("[lx]");
-        return val;
+    else{
+      return -1;
     }
-    return 0;
 }
