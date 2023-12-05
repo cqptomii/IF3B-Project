@@ -9,10 +9,10 @@
 #define brocheReset  -1     
 #define adresseI2C 0x3C
 #define EARTHPRESSUR (1013.25)
-
+#define bLux_pin 21
 #define bLed_pin 18
 #define ventil_pin 18
-#define bLux_pin 21
+#define nbPixel 8
 
 float pressure=0,temp=0;
 int tvoc_value=0;
@@ -26,6 +26,7 @@ const char* ssid = "iPhone (29)";
 const char* password = "ABCDZFGH";
 const char* mqtt_server = "mqtt.ci-ciad.utbm.fr";
 
+Adafruit_NeoPixel pixels=Adafruit_NeoPixel(nbPixel, bLed_pin, NEO_GRB + NEO_KHZ800);
 Adafruit_SSD1306 oled(Largeur, Hauteur, &Wire, brocheReset);
 WiFiClient espClientAir; 
 PubSubClient clientAir(espClientAir); 
@@ -52,7 +53,8 @@ void setup() {
   pinMode(bLux_pin,INPUT);
 
   // Led setup
-  pinMode(bLed_pin,OUTPUT);
+  pixels.begin();
+  safe_led();
   // ventil setup
   pinMode(ventil_pin,OUTPUT);
   delay(2000); 
@@ -211,9 +213,27 @@ void UpdateOLED(float Temp,float Hum,int co2,int tvoc,float pression,float lux){
     }
     oled.display();
 }
-void init_ventile(int valeur){
-  analogWrite(ventil_pin,valeur);
+void init_ventile(){
+  digitalWrite(ventil_pin,HIGH);
 }
 void end_ventile(){
   analogWrite(ventil_pin,0);
+}
+void danger_led(){
+  for (int i = 0; i < nbPixel; i++) {
+    pixels.setPixelColor(i, pixels.Color(255,0,0));
+  }
+  pixels.show();
+  delay(500);
+  for (int i = 0; i < nbPixel; i++) {
+    pixels.setPixelColor(i, pixels.Color(0,0,0));
+  }
+  pixels.show();
+  delay(500);
+}
+void safe_led(){
+  for (int i = 0; i < nbPixel; i++) {
+    pixels.setPixelColor(i, pixels.Color(0,255,0));
+  }
+  pixels.show();
 }
