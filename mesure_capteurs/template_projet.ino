@@ -135,12 +135,6 @@ void setup() {
     if (clientAir.connect("espClientAir")) {
       Serial.println("connected");
       // Subscribe
-      clientAir.subscribe("esp32/bmp280/temperature");
-      clientAir.subscribe("esp32/bmp280/pression");
-      clientAir.subscribe("esp32/bmp280/hauteur");
-      clientAir.subscribe("esp32/css811/luminositePiece");
-      clientAir.subscribe("esp32/css811/qualiteCO2");
-      clientAir.subscribe("esp32/css811/qualiteTVOC");
     } 
 	// Si la connexion échoue, le code imprime "failed, rc=" suivi de l'état de la connexion avec "client.state()" sur la console série 
    // La fonction se répète jusqu'à ce que la connexion soit établie avec succès.
