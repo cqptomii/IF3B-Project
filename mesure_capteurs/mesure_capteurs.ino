@@ -59,7 +59,7 @@ float getLuxData(){
     unsigned int A0_value= analogRead(bLux_pin);
     if(A0_value){
         float voltage= A0_value *(5/1023);
-	      float current= voltage*K*pow(10,6);
+	      float current= voltage*(-1,6)*pow(10,6);
         float Light= current/0.075;
         return Light;
     }
