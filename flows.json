@@ -426,7 +426,7 @@
         "label": "",
         "tooltip": "",
         "group": "3472a843a4b38d4a",
-        "order": 2,
+        "order": 3,
         "width": 5,
         "height": 1,
         "passthru": false,
@@ -469,7 +469,7 @@
         "type": "ui_text",
         "z": "7ecbc1d1b9c5ed19",
         "group": "3472a843a4b38d4a",
-        "order": 1,
+        "order": 2,
         "width": 0,
         "height": 0,
         "name": "",
@@ -563,7 +563,7 @@
         "label": "",
         "tooltip": "",
         "group": "3472a843a4b38d4a",
-        "order": 9,
+        "order": 7,
         "width": 5,
         "height": 1,
         "passthru": false,
@@ -609,7 +609,7 @@
         "type": "ui_text",
         "z": "7ecbc1d1b9c5ed19",
         "group": "3472a843a4b38d4a",
-        "order": 7,
+        "order": 6,
         "width": 0,
         "height": 0,
         "name": "",
@@ -635,9 +635,9 @@
                 "p": "payload"
             }
         ],
-        "repeat": "",
+        "repeat": "10",
         "crontab": "",
-        "once": false,
+        "once": true,
         "onceDelay": 0.1,
         "topic": "",
         "payload": "1100",
@@ -660,9 +660,9 @@
                 "p": "payload"
             }
         ],
-        "repeat": "",
+        "repeat": "10",
         "crontab": "",
-        "once": false,
+        "once": true,
         "onceDelay": 0.1,
         "topic": "",
         "payload": "25",
@@ -685,9 +685,9 @@
                 "p": "payload"
             }
         ],
-        "repeat": "",
+        "repeat": "10",
         "crontab": "",
-        "once": false,
+        "once": true,
         "onceDelay": 0.1,
         "topic": "",
         "payload": "1000",
@@ -708,7 +708,7 @@
         "label": "",
         "tooltip": "",
         "group": "3472a843a4b38d4a",
-        "order": 11,
+        "order": 9,
         "width": 5,
         "height": 1,
         "passthru": false,
@@ -754,7 +754,7 @@
         "type": "ui_text",
         "z": "7ecbc1d1b9c5ed19",
         "group": "3472a843a4b38d4a",
-        "order": 10,
+        "order": 8,
         "width": 0,
         "height": 0,
         "name": "",
@@ -780,9 +780,9 @@
                 "p": "payload"
             }
         ],
-        "repeat": "",
+        "repeat": "10",
         "crontab": "",
-        "once": false,
+        "once": true,
         "onceDelay": 0.1,
         "topic": "",
         "payload": "1000",
@@ -984,8 +984,8 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 1690,
-        "y": 1020,
+        "x": 1670,
+        "y": 1000,
         "wires": [
             [
                 "92d16261d060ec67",
@@ -1007,7 +1007,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1870,
-        "y": 1000,
+        "y": 960,
         "wires": []
     },
     {
@@ -1028,7 +1028,7 @@
         "fontSize": 16,
         "color": "#000000",
         "x": 1850,
-        "y": 1040,
+        "y": 1020,
         "wires": []
     },
     {
@@ -1119,12 +1119,12 @@
         "topic": "topic",
         "topicType": "msg",
         "style": "",
-        "onvalue": "true",
-        "onvalueType": "bool",
+        "onvalue": "ON",
+        "onvalueType": "str",
         "onicon": "",
         "oncolor": "",
-        "offvalue": "false",
-        "offvalueType": "bool",
+        "offvalue": "OFF",
+        "offvalueType": "str",
         "officon": "",
         "offcolor": "",
         "animate": false,
@@ -1154,12 +1154,12 @@
         "topic": "topic",
         "topicType": "msg",
         "style": "",
-        "onvalue": "true",
-        "onvalueType": "bool",
+        "onvalue": "ON",
+        "onvalueType": "str",
         "onicon": "",
         "oncolor": "",
-        "offvalue": "false",
-        "offvalueType": "bool",
+        "offvalue": "OFF",
+        "offvalueType": "str",
         "officon": "",
         "offcolor": "",
         "animate": false,
@@ -1189,12 +1189,12 @@
         "topic": "topic",
         "topicType": "msg",
         "style": "",
-        "onvalue": "true",
-        "onvalueType": "bool",
+        "onvalue": "ON",
+        "onvalueType": "str",
         "onicon": "",
         "oncolor": "",
-        "offvalue": "false",
-        "offvalueType": "bool",
+        "offvalue": "OFF",
+        "offvalueType": "str",
         "officon": "",
         "offcolor": "",
         "animate": false,
@@ -1224,12 +1224,12 @@
         "topic": "topic",
         "topicType": "msg",
         "style": "",
-        "onvalue": "true",
-        "onvalueType": "bool",
+        "onvalue": "ON",
+        "onvalueType": "str",
         "onicon": "",
         "oncolor": "",
-        "offvalue": "false",
-        "offvalueType": "bool",
+        "offvalue": "OFF",
+        "offvalueType": "str",
         "officon": "",
         "offcolor": "",
         "animate": false,
@@ -1259,12 +1259,12 @@
         "topic": "topic",
         "topicType": "msg",
         "style": "",
-        "onvalue": "true",
-        "onvalueType": "bool",
+        "onvalue": "ON",
+        "onvalueType": "str",
         "onicon": "",
         "oncolor": "",
-        "offvalue": "false",
-        "offvalueType": "bool",
+        "offvalue": "OFF",
+        "offvalueType": "str",
         "officon": "",
         "offcolor": "",
         "animate": false,
@@ -1673,8 +1673,7 @@
         "y": 200,
         "wires": [
             [
-                "19c54d25223a6701",
-                "2525164718e80594"
+                "19c54d25223a6701"
             ]
         ]
     },
@@ -1694,8 +1693,7 @@
         "y": 540,
         "wires": [
             [
-                "bf2351968e9c99a0",
-                "d9258160c5b1f315"
+                "bf2351968e9c99a0"
             ]
         ]
     },
@@ -1714,7 +1712,7 @@
         "expiry": "",
         "broker": "6dd44bbfa04210e9",
         "x": 2170,
-        "y": 220,
+        "y": 200,
         "wires": []
     },
     {
@@ -1823,40 +1821,117 @@
         "wires": []
     },
     {
-        "id": "d9258160c5b1f315",
-        "type": "mqtt out",
+        "id": "73a029fb681584c5",
+        "type": "ui_button",
         "z": "7ecbc1d1b9c5ed19",
         "name": "",
-        "topic": "esp32/affichageOLEDgaz",
-        "qos": "",
-        "retain": "",
-        "respTopic": "",
-        "contentType": "",
-        "userProps": "",
-        "correl": "",
-        "expiry": "",
-        "broker": "6dd44bbfa04210e9",
-        "x": 2170,
-        "y": 480,
-        "wires": []
+        "group": "3472a843a4b38d4a",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Reinitialiser les données",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 850,
+        "y": 40,
+        "wires": [
+            [
+                "4218d9c6866ea11d"
+            ]
+        ]
     },
     {
-        "id": "2525164718e80594",
-        "type": "mqtt out",
+        "id": "267ceb7f026b199f",
+        "type": "mqtt in",
         "z": "7ecbc1d1b9c5ed19",
         "name": "",
-        "topic": "esp32/affichageOLEDgaz",
-        "qos": "",
-        "retain": "",
-        "respTopic": "",
-        "contentType": "",
-        "userProps": "",
-        "correl": "",
-        "expiry": "",
+        "topic": "esp32/donnees/initialisation",
+        "qos": "2",
+        "datatype": "auto-detect",
         "broker": "6dd44bbfa04210e9",
-        "x": 2190,
-        "y": 180,
-        "wires": []
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 780,
+        "y": 100,
+        "wires": [
+            [
+                "7994280c112cb818"
+            ]
+        ]
+    },
+    {
+        "id": "7994280c112cb818",
+        "type": "function",
+        "z": "7ecbc1d1b9c5ed19",
+        "name": "Recuperation données BDD",
+        "func": "return msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1100,
+        "y": 100,
+        "wires": [
+            [
+                "3467780e99f22a50"
+            ]
+        ]
+    },
+    {
+        "id": "3467780e99f22a50",
+        "type": "mysql",
+        "z": "7ecbc1d1b9c5ed19",
+        "mydb": "f853144cede7ad81",
+        "name": "database",
+        "x": 1340,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4218d9c6866ea11d",
+        "type": "function",
+        "z": "7ecbc1d1b9c5ed19",
+        "name": "erase BDD",
+        "func": "return msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1070,
+        "y": 40,
+        "wires": [
+            [
+                "cabfc02fa9cfee20"
+            ]
+        ]
+    },
+    {
+        "id": "cabfc02fa9cfee20",
+        "type": "mysql",
+        "z": "7ecbc1d1b9c5ed19",
+        "mydb": "f853144cede7ad81",
+        "name": "database",
+        "x": 1220,
+        "y": 40,
+        "wires": [
+            []
+        ]
     },
     {
         "id": "449680bef5386fa3",
@@ -2034,7 +2109,7 @@
         "type": "ui_group",
         "name": "BMP280",
         "tab": "02211714844374ec",
-        "order": 3,
+        "order": 4,
         "disp": true,
         "width": "9",
         "collapse": false,
@@ -2066,7 +2141,7 @@
         "type": "ui_group",
         "name": "Luxmètre",
         "tab": "02211714844374ec",
-        "order": 5,
+        "order": 6,
         "disp": true,
         "width": 6,
         "collapse": false,
@@ -2077,7 +2152,7 @@
         "type": "ui_group",
         "name": "OLED",
         "tab": "02211714844374ec",
-        "order": 6,
+        "order": 7,
         "disp": true,
         "width": "6",
         "collapse": false,
@@ -2157,7 +2232,7 @@
         "type": "ui_group",
         "name": "Qualité de l'air",
         "tab": "02211714844374ec",
-        "order": 4,
+        "order": 5,
         "disp": true,
         "width": "10",
         "collapse": false,
