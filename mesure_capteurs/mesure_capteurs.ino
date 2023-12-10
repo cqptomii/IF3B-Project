@@ -5,7 +5,6 @@
 #define bLux_pin 21
 Adafruit_BMP280 bmp;
 Adafruit_CCS811 ccs;
-int BH1750address = 0x23; //setting i2c address
 byte LuxData[2];
 int getTVOCData(){
     if(ccs.available()){

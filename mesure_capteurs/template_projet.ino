@@ -6,13 +6,14 @@
 #include <Adafruit_NeoPixel.h>
 #include "mesure_capteurs.h"
 #include <string>
-
+// constantes
 #define Largeur 128         
 #define Hauteur 32        
 #define nbPixel 8
 #define brocheReset  -1     
 #define adresseI2C 0x3C
 #define EARTHPRESSUR (1013.25)
+// Pin
 #define bLux_pin 21
 #define bLed_pin 18
 #define ventil_pin 18
@@ -105,7 +106,7 @@ void safe_led(){
 void setup() {
   Serial.begin(9600);
   // Bouton reset setup
-  pinMode(reset_pin,INPUT);
+  pinMode(reset_pin,INPUT_PULLUP);
   //  bmp280 setup
   while (!bmp.begin()) {
     Serial.println("Could not find a valid BMP280 sensor, check wiring!");
@@ -322,7 +323,9 @@ void loop() {
     }
     //Affichage oled
     UpdateOLED(temp_value,hum_value,co2_value,tvoc_value,pressure_value,lux_value);
-    safe_led();	
+    if(r_pression==false && r_temp==false && r_pression==false && r_co2==false && r_tvoc==false){
+      safe_led();	
+    }
     //publication des valeurs sur node-red
   }
 }
