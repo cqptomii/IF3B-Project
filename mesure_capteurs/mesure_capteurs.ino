@@ -3,8 +3,10 @@
 *
 */
 #define bLux_pin 21
-Adafruit_BMP280 bmp;
+Adafruit_BME280 bme;
 Adafruit_CCS811 ccs;
+#define SEALEVELPRESSURE_HPA (1013.25)
+
 byte LuxData[2];
 int getTVOCData(){
     if(ccs.available()){
@@ -40,17 +42,24 @@ int getCO2Data(){
     }
     return 0;
 }
-void getBM280Data(float *pressure,float *temp){
+void getBM280Data(float *pressure,float *temp,float *humi,float *altitude){
 
-  *pressure=bmp.readPressure();
-  *temp=bmp.readTemperature();
-  Serial.print(F("Pressure (Pa / mB): "));
+  *pressure=bme.readPressure() /100.0;
+  *temp=bme.readTemperature();
+  *humi=bme.readHumidity();
+  *altitude=bme.readAltitude(SEALEVELPRESSURE_HPA);
+  Serial.print("Temperature = ");
+	Serial.print(bme.readTemperature());
+	Serial.println("°C");
+  Serial.print(F("Pressure : "));
   Serial.print(*pressure);
-  Serial.println(F(" mB"));
-  Serial.print(F("Temperature: "));
-  Serial.print(*temp);
-  Serial.println(F(" °C"));
-  Serial.print(F("humidité: "));
+  Serial.println(F(" hpa"));
+  Serial.print("Approx. Altitude = ");
+	Serial.print(*altitude);
+	Serial.println("m");
+  Serial.print("Humidity = ");
+	Serial.print(bme.readHumidity());
+	Serial.println("%");
 }
 float getLuxData(){
     int i=0;int val;

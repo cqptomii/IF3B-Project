@@ -7,11 +7,11 @@
 #include <Wire.h>
 #include <math.h>
 #include <Adafruit_Sensor.h>
-#include <Adafruit_BMP280.h>
+#include <Adafruit_BME280.h>
 #include <Adafruit_CCS811.h>
 #include <Adafruit_SSD1306.h>
-void getBM280Data(float *pressure,float *temp);
 int getCO2Data();
+void getBM280Data(float *pressure,float *temp,float *humi,float *altitude);
 int getTVOCData();
 float getLuxData();
 #endif //PROJETIF3B_MESUR_CAPTEURS_H

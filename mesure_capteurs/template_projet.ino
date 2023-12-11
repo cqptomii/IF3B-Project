@@ -6,6 +6,7 @@
 #include <SPI.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include <Adafruit_BME280.h>
 #include <Adafruit_NeoPixel.h>
 #include "mesure_capteurs.h"
 #include <string>
@@ -15,7 +16,6 @@
 #define nbPixel 8
 #define brocheReset  -1     
 #define adresseI2C 0x3C
-#define EARTHPRESSUR (1013.25)
 // Pin
 #define bLux_pin 21
 #define bLed_pin 15
@@ -23,20 +23,21 @@
 #define reset_pin 21
 #define buzzer_pin 2
 
-float pressure=0,temp=0;
 int tvoc_value=0;
 int co2_value=0;
-float hum_value=0.0;
+float altitude_value=0;
+float humi_value=0.0;
 float lux_value=0.0;
 float pressure_value=0.0;
 float temp_value=0.0;
 
-const char* ssid = "iphone";
-const char* password = "julio2004";
+const char* ssid = "iPhone (29)";
+const char* password = "ABCDZFGH";
 const char* mqtt_server = "mqtt.ci-ciad.utbm.fr";
 
 Adafruit_NeoPixel pixels=Adafruit_NeoPixel(nbPixel, bLed_pin, NEO_GRB + NEO_KHZ800);
 Adafruit_SSD1306 oled(Largeur, Hauteur, &Wire, brocheReset);
+
 WiFiClient espClientAir; 
 PubSubClient clientAir(espClientAir); 
 long lastMsg = 0;
@@ -46,21 +47,19 @@ bool r_co2=false;
 bool r_tvoc=false;
 bool r_pression=false;
 bool r_temp=false;
+bool r_humi=false;
 bool config_temp=true;
 bool config_lumiere=true;
 bool config_tvoc=true;
 bool config_co2=true;
+
 void setup() {
   Serial.begin(9600);
-  Serial.print("efeded");
-  // Bouton reset setup
-  pinMode(reset_pin,INPUT_PULLUP);
   //  bmp280 setup
-  while (!bmp.begin()) {
-    Serial.println("Could not find a valid BMP280 sensor, check wiring!");
-    delay(10000000000);
-  }
-  Serial.println(F("Reading BMP280 : "));
+  if(!bme.begin(0x76)) {
+		Serial.println("Could not find a valid BME280 sensor, check wiring!");
+    while(1);
+	}
   //Ecran setup
   if(!oled.begin(SSD1306_SWITCHCAPVCC, adresseI2C)){
     Serial.print("Erreur de communication");
@@ -70,7 +69,8 @@ void setup() {
 
   // luxmetre setup
   pinMode(bLux_pin,INPUT);
-
+  // Bouton reset setup
+  pinMode(reset_pin,INPUT_PULLUP);
   // Led setup
   pixels.begin();
   safe_led();
@@ -78,10 +78,10 @@ void setup() {
   pinMode(ventil_pin,OUTPUT);
   // buzzer setup 
   pinMode(buzzer_pin,OUTPUT);
-
+  init_ventile();
+  Serial.println(F("Reading BME280 : "));
   delay(2000); 
   setup_wifi();
-  init_ventile();
   clientAir.setServer(mqtt_server, 1883); 
   clientAir.setCallback(callback); // définit la fonction callback comme la fonction à appeler lorsqu'un message MQTT est reçu.
 }
@@ -145,6 +145,24 @@ void callback(char* topic, byte* message, unsigned int length) {
   }
   if(messageTemp=="K"){ // Risque Temperature
     r_temp=true;
+  }
+  if(messageTemp=="H"){ // Risque Humidité
+    r_temp=true;
+  }
+  if(messageTemp=="c"){
+    r_co2=false;
+  }
+  if(messageTemp=="t"){
+    r_tvoc=false;
+  }
+  if(messageTemp=="p"){
+    r_pression=false;
+  }
+  if(messageTemp=="k"){
+    r_temp=false;
+  }
+  if(messageTemp=="h"){
+    r_humi=false;
   }
   if(messageTemp=="ONTVOC"){ // mesure TVOC
     config_tvoc=true;
@@ -228,14 +246,16 @@ if (now - lastMsg > 2000) {
 
   // Mesure BMP280
   if (config_temp) {
-    float pressure, temp;
-    getBM280Data(&pressure, &temp);
+    getBM280Data(&pressure_value, &temp_value,&humi_value,&altitude_value);
 
-    snprintf(convertion, sizeof(convertion), "%.2f", temp);
+    snprintf(convertion, sizeof(convertion), "%.2f", temp_value);
     clientAir.publish("esp32/bmp280/temperature", convertion);
 
-    snprintf(convertion, sizeof(convertion), "%.2f", pressure);
+    snprintf(convertion, sizeof(convertion), "%.2f", pressure_value);
     clientAir.publish("esp32/bmp280/pression", convertion);
+
+    snprintf(convertion, sizeof(convertion), "%.2f", humi_value);
+    clientAir.publish("esp32/bmp280/Humidité", convertion);
   }
 
   // Mesure CCS811
@@ -263,47 +283,52 @@ if (now - lastMsg > 2000) {
     // Affichage erreur liés au co2
     if(r_co2){
       danger_led();
-      digitalWrite(buzzer_pin,LOW);
+      digitalWrite(buzzer_pin,HIGH);
     }
     // Affichage erreur lies au tvoc
     if(r_tvoc){
       danger_led();
-      digitalWrite(buzzer_pin,LOW);
+      digitalWrite(buzzer_pin,HIGH);
     }
     //Affichage erreur lié a la temperature
     if(r_temp){
       danger_led();
-      digitalWrite(buzzer_pin,LOW);
+      digitalWrite(buzzer_pin,HIGH);
     }
     //Affichage erreur lié a la pression
     if(r_pression){
       danger_led();
-      digitalWrite(buzzer_pin,LOW);
+      digitalWrite(buzzer_pin,HIGH);
+    }
+    if(r_humi){
+      danger_led();
+      digitalWrite(buzzer_pin,HIGH);
     }
     //Affichage oled
-    UpdateOLED(temp_value,hum_value,co2_value,tvoc_value,pressure_value,lux_value);
+    UpdateOLED(temp_value,humi_value,co2_value,tvoc_value,pressure_value,lux_value,altitude_value);
     if(r_pression==false && r_temp==false && r_pression==false && r_co2==false && r_tvoc==false){
       safe_led();	
     }
     //publication des valeurs sur node-red
   }
-
-
-void UpdateOLED(float Temp,float Hum,int co2,int tvoc,float pression,float lux){
+void UpdateOLED(float Temp,float Hum,int co2,int tvoc,float pression,float lux,float altitude){
     oled.clearDisplay();
     oled.setTextSize(1);
     oled.setCursor(0,0);
     oled.setTextColor(SSD1306_WHITE);
-    oled.print(10);
+    oled.print(Temp);
     oled.print((char)247);
     oled.print("C");
+    oled.print("Hum:");
+    oled.print(Hum);
+    oled.println("%");
     oled.print("  Lumiere: ");
-    oled.print(10);
+    oled.print(lux);
     oled.println("lux");
     oled.print("Alt : ");
     oled.print(0);
     oled.print("m - ");
-    oled.print(1023);
+    oled.print(pression);
     oled.println("pa");
     oled.print("Co2 : ");
     if(co2>1000){
@@ -342,6 +367,28 @@ void safe_led(){
     pixels.setPixelColor(i, pixels.Color(0,255,0));
   }
   pixels.show();
+}
+void oled_error(bool r_co2,bool r_pression, bool r_temp, bool r_tvoc, bool r_humi){
+  oled.clearDisplay();
+  oled.setTextSize(1);
+  oled.setCursor(0,0);
+  oled.setTextColor(SSD1306_WHITE);
+  if(r_co2){
+    oled.println("Danger CO2 , Aerer la pièce imediatement!! ");
+  }
+  if(r_humi){
+    oled.println("Humidité importante, aérer la pièce ! ");
+  }
+  if(r_pression){
+    oled.println("Danger, Pression trop importante !! ");
+  }
+  if(r_temp){
+    oled.println("Attention température trop élevée !");
+  }
+  if(r_tvoc){
+    oled.println("Danger TVOC , Aerer la pièce imediatement !! ");   
+  }
+  oled.display();
 }
 
 
