@@ -19,8 +19,10 @@
 // Pin
 #define bLux_pin 21
 #define bLed_pin 15
-#define ventil_pin 8
-#define reset_pin 21
+#define ventil_pin 12 
+
+
+#define reset_pin 4
 #define buzzer_pin 2
 
 int tvoc_value=0;
@@ -60,6 +62,12 @@ void setup() {
 		Serial.println("Could not find a valid BME280 sensor, check wiring!");
     while(1);
 	}
+   // ccs811 setup
+  if(!ccs.begin(0x76)){
+    Serial.println("Failed to start sensor! Please check your wiring.");
+    while(1);
+  }
+  while(!ccs.available());
   //Ecran setup
   if(!oled.begin(SSD1306_SWITCHCAPVCC, adresseI2C)){
     Serial.print("Erreur de communication");
@@ -241,7 +249,7 @@ void loop() {
 
 // Minuteur pour effectuer les mesures (de base 5 minutes)
 long now = millis();
-if (now - lastMsg > 2000) {
+if (now - lastMsg > 50000) {
   lastMsg = now;
 
   // Mesure BMP280
