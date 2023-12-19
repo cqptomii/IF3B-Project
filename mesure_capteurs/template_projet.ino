@@ -217,11 +217,18 @@ void reconnect() {
    //Si la connexion est réussie, le code imprime "connected" sur la console série et s'abonne au topic "esp32/led" avec "client.subscribe("esp32/led")".
     if (clientAir.connect("espClientAir")) {
       Serial.println("connected");
+      // mesure subscribe
       clientAir.subscribe("esp32/bmp280/temperature");
       clientAir.subscribe("esp32/Mode/pression");
       clientAir.subscribe("esp32/Mode/gaz/TVOC");
       clientAir.subscribe("esp32/Mode/gaz/CO2");
       clientAir.subscribe("esp32/bandeauled/danger");
+
+      // mode subscribe
+      clientAir.subscribe("esp32/Mode/temperature");
+      clientAir.subscribe("esp32/Mode/lumiere");
+      clientAir.subscribe("esp32/Mode/gaz/TVOC");
+      clientAir.subscribe("esp32/Mode/gaz/CO2");
     } 
 	// Si la connexion échoue, le code imprime "failed, rc=" suivi de l'état de la connexion avec "client.state()" sur la console série 
    // La fonction se répète jusqu'à ce que la connexion soit établie avec succès.
