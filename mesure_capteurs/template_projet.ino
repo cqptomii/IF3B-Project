@@ -16,19 +16,21 @@
 #define nbPixel 8
 #define brocheReset  -1     
 #define adresseI2C 0x3C
+int BH1750address = 0x23;
 // Pin
-#define bLux_pin 21
-#define bLed_pin 15
-#define ventil_pin 12 
+#define bLed_pin 27
+#define ventil_pin 19
 
 
 #define reset_pin 4
-#define buzzer_pin 2
+#define buzzer_pin 26
 
 int tvoc_value=0;
 int co2_value=0;
 float altitude_value=0;
 float humi_value=0.0;
+uint8_t buf[4] = {0};
+uint16_t data, data1;
 float lux_value=0.0;
 float pressure_value=0.0;
 float temp_value=0.0;
@@ -57,16 +59,19 @@ bool config_co2=true;
 
 void setup() {
   Serial.begin(9600);
+  Serial.println("deds");
   //  bmp280 setup
   if(!bme.begin(0x76)) {
 		Serial.println("Could not find a valid BME280 sensor, check wiring!");
     while(1);
 	}
+  Serial.println(F("Reading BME280 : "));
    // ccs811 setup
   if(!ccs.begin(0x76)){
     Serial.println("Failed to start sensor! Please check your wiring.");
     while(1);
   }
+  Serial.println(F("Reading CCS811 : "));
   while(!ccs.available());
   //Ecran setup
   if(!oled.begin(SSD1306_SWITCHCAPVCC, adresseI2C)){
@@ -76,7 +81,7 @@ void setup() {
   oled.display();
 
   // luxmetre setup
-  pinMode(bLux_pin,INPUT);
+  Wire.begin()
   // Bouton reset setup
   pinMode(reset_pin,INPUT_PULLUP);
   // Led setup
@@ -87,7 +92,8 @@ void setup() {
   // buzzer setup 
   pinMode(buzzer_pin,OUTPUT);
   init_ventile();
-  Serial.println(F("Reading BME280 : "));
+
+
   delay(2000); 
   setup_wifi();
   clientAir.setServer(mqtt_server, 1883); 
@@ -247,78 +253,86 @@ void loop() {
   clientAir.publish("esp32/buttonResetOption", "1");
   }
 
-// Minuteur pour effectuer les mesures (de base 5 minutes)
-long now = millis();
-if (now - lastMsg > 50000) {
-  lastMsg = now;
+  // Minuteur pour effectuer les mesures (de base 5 minutes)
+  long now = millis();
+  if (now - lastMsg > 50000) {
+    lastMsg = now; 
 
-  // Mesure BMP280
-  if (config_temp) {
-    getBM280Data(&pressure_value, &temp_value,&humi_value,&altitude_value);
+    // Mesure BMP280
+    if (config_temp) {
+      getBM280Data(&pressure_value, &temp_value,&humi_value,&altitude_value);
 
-    snprintf(convertion, sizeof(convertion), "%.2f", temp_value);
-    clientAir.publish("esp32/bmp280/temperature", convertion);
+      snprintf(convertion, sizeof(convertion), "%.2f", temp_value);
+      clientAir.publish("esp32/bmp280/temperature", convertion);
 
-    snprintf(convertion, sizeof(convertion), "%.2f", pressure_value);
-    clientAir.publish("esp32/bmp280/pression", convertion);
+      snprintf(convertion, sizeof(convertion), "%.2f", pressure_value);
+      clientAir.publish("esp32/bmp280/pression", convertion);
 
-    snprintf(convertion, sizeof(convertion), "%.2f", humi_value);
-    clientAir.publish("esp32/bmp280/Humidité", convertion);
+      snprintf(convertion, sizeof(convertion), "%.2f", humi_value);
+      clientAir.publish("esp32/bmp280/Humidité", convertion);
+
+      snprintf(convertion, sizeof(convertion), "%.2f", altitude_value);
+      clientAir.publish("esp32/bmp280/hauteur", convertion);
+    }
+
+    // Mesure CCS811
+    if (config_co2) {
+      int co2_value = getCO2Data();
+      snprintf(convertion, sizeof(convertion), "%d", co2_value);
+      clientAir.publish("esp32/css811/qualiteCO2", convertion);
+    }
+
+    // Mesure TVOC
+    if (config_tvoc) {
+      int tvoc_value = getTVOCData();
+      snprintf(convertion, sizeof(convertion), "%d", tvoc_value);
+      clientAir.publish("esp32/css811/qualiteTVOC", convertion);
+    }
+
+    // Mesure luxmètre
+    if (config_lumiere) {
+      readReg(0x10, buf, 2);              //Register Address 0x10
+      data = buf[0] << 8 | buf[1];
+      lux_value = (((float)data )/1.2);
+      Serial.print("LUX:");
+      Serial.print(lux_value);
+      Seritemperatureal.print("lx");
+      Serial.print("\n");
+      snprintf(convertion, sizeof(convertion), "%.2f", lux_value);
+      clientAir.publish("esp32/css811/luminositePiece", convertion);
+    }
   }
 
-  // Mesure CCS811
-  if (config_co2) {
-    int co2_value = getCO2Data();
-    snprintf(convertion, sizeof(convertion), "%d", co2_value);
-    clientAir.publish("esp32/css811/qualiteCO2", convertion);
+  // Affichage erreur liés au co2
+  if(r_co2){
+    danger_led();
+    digitalWrite(buzzer_pin,HIGH);
   }
-
-  // Mesure TVOC
-  if (config_tvoc) {
-    int tvoc_value = getTVOCData();
-    snprintf(convertion, sizeof(convertion), "%d", tvoc_value);
-    clientAir.publish("esp32/css811/qualiteTVOC", convertion);
+  // Affichage erreur lies au tvoc
+  if(r_tvoc){
+    danger_led();
+    digitalWrite(buzzer_pin,HIGH);
   }
-
-  // Mesure luxmètre
-  if (config_lumiere) {
-    float lux_value = getLuxData();
-    snprintf(convertion, sizeof(convertion), "%.2f", lux_value);
-    clientAir.publish("esp32/css811/luminositePiece", convertion);
+  //Affichage erreur lié a la temperature
+  if(r_temp){
+    danger_led();
+    digitalWrite(buzzer_pin,HIGH);
+  }
+  //Affichage erreur lié a la pression
+  if(r_pression){
+    danger_led();
+    digitalWrite(buzzer_pin,HIGH);
+  }
+  if(r_humi){
+    danger_led();
+    digitalWrite(buzzer_pin,HIGH);
+  }
+  //Affichage oled
+  UpdateOLED(temp_value,humi_value,co2_value,tvoc_value,pressure_value,lux_value,altitude_value);
+  if(r_pression==false && r_temp==false && r_pression==false && r_co2==false && r_tvoc==false){
+    safe_led();	
   }
 }
-
-    // Affichage erreur liés au co2
-    if(r_co2){
-      danger_led();
-      digitalWrite(buzzer_pin,HIGH);
-    }
-    // Affichage erreur lies au tvoc
-    if(r_tvoc){
-      danger_led();
-      digitalWrite(buzzer_pin,HIGH);
-    }
-    //Affichage erreur lié a la temperature
-    if(r_temp){
-      danger_led();
-      digitalWrite(buzzer_pin,HIGH);
-    }
-    //Affichage erreur lié a la pression
-    if(r_pression){
-      danger_led();
-      digitalWrite(buzzer_pin,HIGH);
-    }
-    if(r_humi){
-      danger_led();
-      digitalWrite(buzzer_pin,HIGH);
-    }
-    //Affichage oled
-    UpdateOLED(temp_value,humi_value,co2_value,tvoc_value,pressure_value,lux_value,altitude_value);
-    if(r_pression==false && r_temp==false && r_pression==false && r_co2==false && r_tvoc==false){
-      safe_led();	
-    }
-    //publication des valeurs sur node-red
-  }
 void UpdateOLED(float Temp,float Hum,int co2,int tvoc,float pression,float lux,float altitude){
     oled.clearDisplay();
     oled.setTextSize(1);
@@ -327,30 +341,30 @@ void UpdateOLED(float Temp,float Hum,int co2,int tvoc,float pression,float lux,f
     oled.print(Temp);
     oled.print((char)247);
     oled.print("C");
-    oled.print("Hum:");
+    oled.print("  Hum:");
     oled.print(Hum);
     oled.println("%");
-    oled.print("  Lumiere: ");
+    oled.print("Lumiere:");
     oled.print(lux);
     oled.println("lux");
-    oled.print("Alt : ");
-    oled.print(0);
-    oled.print("m - ");
+    oled.print("Alt:");
+    oled.print(altitude_value);
+    oled.print("m-");
     oled.print(pression);
     oled.println("pa");
-    oled.print("Co2 : ");
+    oled.print("Co2:");
     if(co2>1000){
-      oled.println("Dangereux");
+      oled.print("Dangereux");
     }
     else{
-      oled.println("Correct");
+      oled.print("Correct");
     }
-    oled.print("Tvoc : ");
+    oled.print("Tvoc:");
     if(tvoc>500){
-      oled.println("Dangereux");
+      oled.print("Dangereux");
     }
     else{
-      oled.println("Correct");
+      oled.print("Correct");
     }
     oled.display();
 }
@@ -398,5 +412,21 @@ void oled_error(bool r_co2,bool r_pression, bool r_temp, bool r_tvoc, bool r_hum
   }
   oled.display();
 }
-
-
+uint8_t readReg(uint8_t reg, const void* pBuf, size_t size)
+{
+  if (pBuf == NULL) {
+    Serial.println("pBuf ERROR!! : null pointer");
+  }
+  uint8_t * _pBuf = (uint8_t *)pBuf;
+  Wire.beginTransmission(address);
+  Wire.write(&reg, 1);
+  if ( Wire.endTransmission() != 0) {
+    return 0;
+  }
+  delay(20);
+  Wire.requestFrom(address, (uint8_t) size);
+  for (uint16_t i = 0; i < size; i++) {
+    _pBuf[i] = Wire.read();
+  }
+  return size;
+}
