@@ -16,21 +16,20 @@
 #define nbPixel 8
 #define brocheReset  -1     
 #define adresseI2C 0x3C
-int BH1750address = 0x23;
+uint16_t address = 0x23;
+
 // Pin
 #define bLed_pin 27
 #define ventil_pin 19
-
-
 #define reset_pin 4
-#define buzzer_pin 26
+#define buzzer_pin 33
 
-int tvoc_value=0;
-int co2_value=0;
-float altitude_value=0;
-float humi_value=0.0;
 uint8_t buf[4] = {0};
 uint16_t data, data1;
+int tvoc_value=0;
+int co2_value=0;
+float altitude_value=0.0;
+float humi_value=0.0;
 float lux_value=0.0;
 float pressure_value=0.0;
 float temp_value=0.0;
@@ -59,15 +58,14 @@ bool config_co2=true;
 
 void setup() {
   Serial.begin(9600);
-  Serial.println("deds");
-  //  bmp280 setup
+  //  bme280 setup
   if(!bme.begin(0x76)) {
 		Serial.println("Could not find a valid BME280 sensor, check wiring!");
     while(1);
 	}
   Serial.println(F("Reading BME280 : "));
    // ccs811 setup
-  if(!ccs.begin(0x76)){
+  if(!ccs.begin()){
     Serial.println("Failed to start sensor! Please check your wiring.");
     while(1);
   }
@@ -81,16 +79,16 @@ void setup() {
   oled.display();
 
   // luxmetre setup
-  Wire.begin()
+  Wire.begin();
   // Bouton reset setup
   pinMode(reset_pin,INPUT_PULLUP);
   // Led setup
   pixels.begin();
   safe_led();
-  // ventil setup
-  pinMode(ventil_pin,OUTPUT);
   // buzzer setup 
   pinMode(buzzer_pin,OUTPUT);
+   // ventil setup
+  pinMode(ventil_pin,OUTPUT);
   init_ventile();
 
 
@@ -223,6 +221,7 @@ void reconnect() {
       clientAir.subscribe("esp32/Mode/gaz/TVOC");
       clientAir.subscribe("esp32/Mode/gaz/CO2");
       clientAir.subscribe("esp32/bandeauled/danger");
+      clientAir.subscribe("esp32/css811/luminositePiece");
 
       // mode subscribe
       clientAir.subscribe("esp32/Mode/temperature");
@@ -255,14 +254,14 @@ void loop() {
   
   char convertion[10];
 
-// Bouton de réinitialisation
-  if (analogRead(reset_pin) == LOW) {
-  clientAir.publish("esp32/buttonResetOption", "1");
+  // Bouton de réinitialisation
+  if (digitalRead(reset_pin) == LOW) {
+    clientAir.publish("esp32/buttonResetOption", "1");
   }
 
   // Minuteur pour effectuer les mesures (de base 5 minutes)
   long now = millis();
-  if (now - lastMsg > 50000) {
+  if (now - lastMsg > 300000) {
     lastMsg = now; 
 
     // Mesure BMP280
@@ -303,7 +302,7 @@ void loop() {
       lux_value = (((float)data )/1.2);
       Serial.print("LUX:");
       Serial.print(lux_value);
-      Seritemperatureal.print("lx");
+      Serial.print("lx");
       Serial.print("\n");
       snprintf(convertion, sizeof(convertion), "%.2f", lux_value);
       clientAir.publish("esp32/css811/luminositePiece", convertion);
@@ -313,31 +312,34 @@ void loop() {
   // Affichage erreur liés au co2
   if(r_co2){
     danger_led();
-    digitalWrite(buzzer_pin,HIGH);
+    analogWrite(buzzer_pin,HIGH);
   }
   // Affichage erreur lies au tvoc
   if(r_tvoc){
     danger_led();
-    digitalWrite(buzzer_pin,HIGH);
+    analogWrite(buzzer_pin,HIGH);
   }
   //Affichage erreur lié a la temperature
   if(r_temp){
     danger_led();
-    digitalWrite(buzzer_pin,HIGH);
+    analogWrite(buzzer_pin,HIGH);
   }
   //Affichage erreur lié a la pression
   if(r_pression){
     danger_led();
-    digitalWrite(buzzer_pin,HIGH);
+    analogWrite(buzzer_pin,HIGH);
   }
   if(r_humi){
     danger_led();
-    digitalWrite(buzzer_pin,HIGH);
+    analogWrite(buzzer_pin,HIGH);
   }
   //Affichage oled
-  UpdateOLED(temp_value,humi_value,co2_value,tvoc_value,pressure_value,lux_value,altitude_value);
   if(r_pression==false && r_temp==false && r_pression==false && r_co2==false && r_tvoc==false){
+    analogWrite(buzzer_pin,LOW);
+    UpdateOLED(temp_value,humi_value,co2_value,tvoc_value,pressure_value,lux_value,altitude_value);
     safe_led();	
+  }else{
+    oled_error(r_co2, r_pression, r_temp, r_tvoc, r_humi);
   }
 }
 void UpdateOLED(float Temp,float Hum,int co2,int tvoc,float pression,float lux,float altitude){
@@ -361,17 +363,17 @@ void UpdateOLED(float Temp,float Hum,int co2,int tvoc,float pression,float lux,f
     oled.println("pa");
     oled.print("Co2:");
     if(co2>1000){
-      oled.print("Dangereux");
+      oled.print("Danger");
     }
     else{
-      oled.print("Correct");
+      oled.print("Bon");
     }
     oled.print("Tvoc:");
     if(tvoc>500){
-      oled.print("Dangereux");
+      oled.print("Danger");
     }
     else{
-      oled.print("Correct");
+      oled.print("Bon");
     }
     oled.display();
 }
@@ -379,7 +381,6 @@ void init_ventile(){
   digitalWrite(ventil_pin,HIGH);
 }
 void danger_led(){
-  digitalWrite(buzzer_pin,HIGH);
   for (int i = 0; i < nbPixel; i++) {
     pixels.setPixelColor(i, pixels.Color(255,0,0));
   }
@@ -389,7 +390,6 @@ void danger_led(){
     pixels.setPixelColor(i, pixels.Color(0,0,0));
   }
   pixels.show();
-  delay(500);
 }
 void safe_led(){
   for (int i = 0; i < nbPixel; i++) {
