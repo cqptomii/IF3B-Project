@@ -385,7 +385,7 @@
         "type": "function",
         "z": "f2dafc0f2878aa8f",
         "name": "check value",
-        "func": "if(msg.payload > \"pressure_max\"){\nreturn \"P\";\n}\nelse{\n    return \"p\";\n}",
+        "func": "if(msg.payload > global.pressure_max){\nreturn \"P\";\n}\nelse{\n    return \"p\";\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -423,27 +423,9 @@
         "y": 1140,
         "wires": [
             [
-                "1b3bd316519ed961",
-                "533bad2c26c77048"
+                "533bad2c26c77048",
+                "65e601e07f99dabc"
             ]
-        ]
-    },
-    {
-        "id": "1b3bd316519ed961",
-        "type": "function",
-        "z": "f2dafc0f2878aa8f",
-        "name": "set_maxTemp",
-        "func": "global.set(\"temp_max\", msg.payload);\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 680,
-        "y": 1120,
-        "wires": [
-            []
         ]
     },
     {
@@ -490,30 +472,11 @@
         "y": 1240,
         "wires": [
             [
-                "bdc27990f2fd2ebe",
                 "0ca3a438903f7ba1"
             ]
         ],
         "inputLabels": [
             "15"
-        ]
-    },
-    {
-        "id": "bdc27990f2fd2ebe",
-        "type": "function",
-        "z": "f2dafc0f2878aa8f",
-        "name": "set_maxPression",
-        "func": "global.set(\"pressure_max\", msg.payload);\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 690,
-        "y": 1220,
-        "wires": [
-            []
         ]
     },
     {
@@ -560,30 +523,12 @@
         "y": 1320,
         "wires": [
             [
-                "977e7079b9d493b0",
-                "d25aad9faeccdf8c"
+                "d25aad9faeccdf8c",
+                "ff37d625f368f0f9"
             ]
         ],
         "inputLabels": [
             "16"
-        ]
-    },
-    {
-        "id": "977e7079b9d493b0",
-        "type": "function",
-        "z": "f2dafc0f2878aa8f",
-        "name": "set_maxCO2",
-        "func": "global.set(\"co2_max\", msg.payload);\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 670,
-        "y": 1300,
-        "wires": [
-            []
         ]
     },
     {
@@ -705,30 +650,12 @@
         "y": 1420,
         "wires": [
             [
-                "f1c80f72d3ffea17",
-                "3866f1ae78407f24"
+                "3866f1ae78407f24",
+                "42c16d86b2b67b1d"
             ]
         ],
         "inputLabels": [
             "20"
-        ]
-    },
-    {
-        "id": "f1c80f72d3ffea17",
-        "type": "function",
-        "z": "f2dafc0f2878aa8f",
-        "name": "set_maxTVOC",
-        "func": "global.set(\"tvoc_max\", msg.payload);\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 680,
-        "y": 1400,
-        "wires": [
-            []
         ]
     },
     {
@@ -1384,7 +1311,7 @@
         "type": "function",
         "z": "f2dafc0f2878aa8f",
         "name": "check value",
-        "func": "if(msg.payload > \"temp_max\"){\nreturn \"K\";\n}\nelse{\n    return \"k\";\n}",
+        "func": "if(msg.payload > global.temp_max){\nreturn \"K\";\n}\nelse{\n    return \"k\";\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -1568,7 +1495,7 @@
         "type": "function",
         "z": "f2dafc0f2878aa8f",
         "name": "check value",
-        "func": "if(msg.payload > \"humi_max\"){\nreturn \"H\";\n}\nelse{\n    return\"h\";\n}",
+        "func": "if(msg.payload > global.humi_max){\nreturn \"H\";\n}\nelse{\n    return\"h\";\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -1624,30 +1551,12 @@
         "y": 1520,
         "wires": [
             [
-                "34292dac8d2978b0",
-                "1ea55f28ff16d262"
+                "1ea55f28ff16d262",
+                "a81b60c6e9f6f214"
             ]
         ],
         "inputLabels": [
             "20"
-        ]
-    },
-    {
-        "id": "34292dac8d2978b0",
-        "type": "function",
-        "z": "f2dafc0f2878aa8f",
-        "name": "set_maxTVOC",
-        "func": "global.set(\"humi_max\", msg.payload);",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 680,
-        "y": 1500,
-        "wires": [
-            []
         ]
     },
     {
@@ -1928,7 +1837,7 @@
         "type": "function",
         "z": "f2dafc0f2878aa8f",
         "name": "check CO2 value",
-        "func": "if(msg.payload > \"co2_max\"){\n    return \"C\";\n}",
+        "func": "if(msg.payload > global.co2_max){\n    return \"C\";\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -2130,7 +2039,7 @@
         "type": "function",
         "z": "f2dafc0f2878aa8f",
         "name": "check TVOC value",
-        "func": "if(msg.payload > \"tvoc_max\"){\n    return \"T\";\n}",
+        "func": "if(msg.payload > global.tvoc_max){\n    return \"T\";\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -2405,6 +2314,131 @@
             [
                 "6768041a04a16fa2"
             ]
+        ]
+    },
+    {
+        "id": "65e601e07f99dabc",
+        "type": "change",
+        "z": "f2dafc0f2878aa8f",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "temp_max",
+                "tot": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 690,
+        "y": 1120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ee27c9a1f6384a87",
+        "type": "change",
+        "z": "f2dafc0f2878aa8f",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "pressure_max",
+                "tot": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 690,
+        "y": 1220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ff37d625f368f0f9",
+        "type": "change",
+        "z": "f2dafc0f2878aa8f",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "co2_max",
+                "tot": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 690,
+        "y": 1300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "42c16d86b2b67b1d",
+        "type": "change",
+        "z": "f2dafc0f2878aa8f",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "tvoc_max",
+                "tot": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 690,
+        "y": 1400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a81b60c6e9f6f214",
+        "type": "change",
+        "z": "f2dafc0f2878aa8f",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "humi_max",
+                "tot": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 690,
+        "y": 1500,
+        "wires": [
+            []
         ]
     },
     {
