@@ -21,11 +21,12 @@ uint16_t address = 0x23;
 // Pin
 #define bLed_pin 27
 #define ventil_pin 19
-#define reset_pin 4
+#define reset_pin 26
 #define buzzer_pin 33
 
 uint8_t buf[4] = {0};
 uint16_t data, data1;
+
 int tvoc_value=0;
 int co2_value=0;
 float altitude_value=0.0;
@@ -55,15 +56,18 @@ bool config_temp=true;
 bool config_lumiere=true;
 bool config_tvoc=true;
 bool config_co2=true;
+bool reset_config=true;
 
 void setup() {
   Serial.begin(9600);
+
   //  bme280 setup
   if(!bme.begin(0x76)) {
 		Serial.println("Could not find a valid BME280 sensor, check wiring!");
     while(1);
 	}
   Serial.println(F("Reading BME280 : "));
+
    // ccs811 setup
   if(!ccs.begin()){
     Serial.println("Failed to start sensor! Please check your wiring.");
@@ -71,6 +75,7 @@ void setup() {
   }
   Serial.println(F("Reading CCS811 : "));
   while(!ccs.available());
+
   //Ecran setup
   if(!oled.begin(SSD1306_SWITCHCAPVCC, adresseI2C)){
     Serial.print("Erreur de communication");
@@ -87,7 +92,7 @@ void setup() {
   safe_led();
   // buzzer setup 
   pinMode(buzzer_pin,OUTPUT);
-   // ventil setup
+  // ventil setup
   pinMode(ventil_pin,OUTPUT);
   init_ventile();
 
@@ -217,12 +222,14 @@ void reconnect() {
       Serial.println("connected");
       // mesure subscribe
       clientAir.subscribe("esp32/bmp280/temperature");
-      clientAir.subscribe("esp32/Mode/pression");
-      clientAir.subscribe("esp32/Mode/gaz/TVOC");
-      clientAir.subscribe("esp32/Mode/gaz/CO2");
+      clientAir.subscribe("esp32/bmp280/pression");
+      clientAir.subscribe("esp32/bmp280/Humidité");
+      clientAir.subscribe("esp32/bmp280/hauteur");
+      clientAir.subscribe("esp32/css811/qualiteTVOC");
+      clientAir.subscribe("esp32/css811/qualiteCO2");
       clientAir.subscribe("esp32/bandeauled/danger");
       clientAir.subscribe("esp32/css811/luminositePiece");
-
+      clientAir.subscribe("esp32/buttonResetOption");
       // mode subscribe
       clientAir.subscribe("esp32/Mode/temperature");
       clientAir.subscribe("esp32/Mode/lumiere");
@@ -255,13 +262,16 @@ void loop() {
   char convertion[10];
 
   // Bouton de réinitialisation
-  if (digitalRead(reset_pin) == LOW) {
+  if (digitalRead(reset_pin) == LOW && reset_config == true) {
     clientAir.publish("esp32/buttonResetOption", "1");
+    reset_config=false;
   }
-
+  if(digitalRead(reset_pin) == HIGH){
+    reset_config=true;
+  }
   // Minuteur pour effectuer les mesures (de base 5 minutes)
   long now = millis();
-  if (now - lastMsg > 300000) {
+  if (now - lastMsg > 30000) {
     lastMsg = now; 
 
     // Mesure BMP280
@@ -436,4 +446,5 @@ uint8_t readReg(uint8_t reg, const void* pBuf, size_t size)
     _pBuf[i] = Wire.read();
   }
   return size;
-}
+} 
+
