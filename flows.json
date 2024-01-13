@@ -28,7 +28,8 @@
                 "a9ebbafb47255fd7",
                 "b3cd132aae369fd9",
                 "625bbbdb98b46e06",
-                "0a11ea117266bdfc"
+                "0a11ea117266bdfc",
+                "f709d00a2c6e8691"
             ]
         ]
     },
@@ -145,7 +146,7 @@
         "type": "debug",
         "z": "184c8de33e0963dd",
         "name": "msg.payload",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -162,7 +163,7 @@
         "type": "debug",
         "z": "184c8de33e0963dd",
         "name": "msg.payload",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -179,7 +180,7 @@
         "type": "debug",
         "z": "184c8de33e0963dd",
         "name": "msg.payload",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -385,7 +386,7 @@
         "type": "function",
         "z": "184c8de33e0963dd",
         "name": "check value",
-        "func": "if(msg.payload > global.get(\"pressure_max\")){\nreturn \"P\";\n}\nelse{\n    return \"p\";\n}",
+        "func": "if(msg.payload > global.get(\"pressure_max\")){\n    msg.payload = \"P\";\n    return msg;\n}\nelse{\n    msg.payload = \"p\";\n    return msg;\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -424,7 +425,7 @@
         "wires": [
             [
                 "9bcf780a44b4c092",
-                "7b61ea7267dea8f8"
+                "54070036edaf627d"
             ]
         ]
     },
@@ -472,7 +473,8 @@
         "y": 1240,
         "wires": [
             [
-                "78c5bc1caa4fa974"
+                "78c5bc1caa4fa974",
+                "bc6004388ee1c101"
             ]
         ],
         "inputLabels": [
@@ -524,7 +526,7 @@
         "wires": [
             [
                 "013d116e013f1fee",
-                "f924908c1a775e1d"
+                "62c8b271dc0f9d48"
             ]
         ],
         "inputLabels": [
@@ -651,7 +653,7 @@
         "wires": [
             [
                 "a353c5712dcbf724",
-                "8152e212428a8913"
+                "247205b93734c65e"
             ]
         ],
         "inputLabels": [
@@ -1311,7 +1313,7 @@
         "type": "function",
         "z": "184c8de33e0963dd",
         "name": "check value",
-        "func": "if(msg.payload > global.get(\"temp_max\")){\nreturn \"K\";\n}\nelse{\n    return \"k\";\n}",
+        "func": "if(msg.payload > global.get(\"temp_max\")){\n    msg.payload = \"K\";\n    return msg;\n}\nelse{\n    msg.payload = \"k\";\n    return msg;\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -1402,7 +1404,7 @@
         "type": "debug",
         "z": "184c8de33e0963dd",
         "name": "msg.payload",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1495,7 +1497,7 @@
         "type": "function",
         "z": "184c8de33e0963dd",
         "name": "check value",
-        "func": "if(msg.payload > global.get(\"humi_max\")){\nreturn \"H\";\n}\nelse{\n    return\"h\";\n}",
+        "func": "if(msg.payload > global.get(\"humi_max\")){\n    msg.payload = \"H\";\n    return msg;\n}\nelse{\n    msg.payload = \"h\";\n    return msg;\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -1552,7 +1554,7 @@
         "wires": [
             [
                 "0aa529f5a9edaa67",
-                "e7afa6f4ab57e2b0"
+                "cceb043b5a472af3"
             ]
         ],
         "inputLabels": [
@@ -1751,7 +1753,7 @@
         "type": "debug",
         "z": "184c8de33e0963dd",
         "name": "msg.payload",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1837,7 +1839,7 @@
         "type": "function",
         "z": "184c8de33e0963dd",
         "name": "check CO2 value",
-        "func": "if(msg.payload > global.get(\"co2_max\")){\n    return \"C\";\n}",
+        "func": "if(msg.payload > global.get(\"co2_max\")){\n    msg.payload = \"C\";\n    return msg;\n} else{\n    msg.payload = \"c\";\n    return msg;\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -1960,7 +1962,7 @@
         "type": "debug",
         "z": "184c8de33e0963dd",
         "name": "msg.payload",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -2039,7 +2041,7 @@
         "type": "function",
         "z": "184c8de33e0963dd",
         "name": "check TVOC value",
-        "func": "if(msg.payload > global.get(\"tvoc_max\")){\n    return \"T\";\n}",
+        "func": "if(msg.payload > global.get(\"tvoc_max\")){\n    msg.payload = \"T\";\n    return msg;\n}else{\n    msg.payload = \"t\";\n    return msg;\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -2143,7 +2145,7 @@
         "type": "debug",
         "z": "184c8de33e0963dd",
         "name": "msg.payload",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -2317,129 +2319,226 @@
         ]
     },
     {
-        "id": "7b61ea7267dea8f8",
-        "type": "change",
+        "id": "f709d00a2c6e8691",
+        "type": "function",
         "z": "184c8de33e0963dd",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "temp_max",
-                "tot": "global"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 690,
+        "name": "function 1",
+        "func": "\nmsg = global.get(\"temp_max\");\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 420,
+        "wires": [
+            [
+                "71aea84ff19ca180"
+            ]
+        ]
+    },
+    {
+        "id": "71aea84ff19ca180",
+        "type": "debug",
+        "z": "184c8de33e0963dd",
+        "name": "msg.payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 590,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "54070036edaf627d",
+        "type": "function",
+        "z": "184c8de33e0963dd",
+        "name": "check value",
+        "func": "global.set(\"temp_max\",msg.payload);\nreturn global.get(\"temp_max\");",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
         "y": 1120,
         "wires": [
-            []
+            [
+                "d96441be90d0d021"
+            ]
         ]
     },
     {
-        "id": "b3c49c54ff3f89cf",
-        "type": "change",
+        "id": "d96441be90d0d021",
+        "type": "debug",
         "z": "184c8de33e0963dd",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "pressure_max",
-                "tot": "global"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 690,
+        "name": "msg.payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 1120,
+        "wires": []
+    },
+    {
+        "id": "bc6004388ee1c101",
+        "type": "function",
+        "z": "184c8de33e0963dd",
+        "name": "check value",
+        "func": "global.set(\"pressure_max\",msg.payload);\nreturn global.get(\"pressure_max\");",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
         "y": 1220,
         "wires": [
-            []
+            [
+                "c4d140f7a1541e83"
+            ]
         ]
     },
     {
-        "id": "f924908c1a775e1d",
-        "type": "change",
+        "id": "c4d140f7a1541e83",
+        "type": "debug",
         "z": "184c8de33e0963dd",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "co2_max",
-                "tot": "global"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 690,
+        "name": "msg.payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 1220,
+        "wires": []
+    },
+    {
+        "id": "62c8b271dc0f9d48",
+        "type": "function",
+        "z": "184c8de33e0963dd",
+        "name": "check value",
+        "func": "global.set(\"humi_max\",msg.payload);\nreturn global.get(\"humi_max\");",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
         "y": 1300,
         "wires": [
-            []
+            [
+                "47972386c625068c"
+            ]
         ]
     },
     {
-        "id": "8152e212428a8913",
-        "type": "change",
+        "id": "47972386c625068c",
+        "type": "debug",
         "z": "184c8de33e0963dd",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "tvoc_max",
-                "tot": "global"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 690,
+        "name": "msg.payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 1300,
+        "wires": []
+    },
+    {
+        "id": "247205b93734c65e",
+        "type": "function",
+        "z": "184c8de33e0963dd",
+        "name": "check value",
+        "func": "global.set(\"co2_max\",msg.payload);\nreturn global.get(\"co2_max\");",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
         "y": 1400,
         "wires": [
-            []
+            [
+                "3f42b589a161b9f5"
+            ]
         ]
     },
     {
-        "id": "e7afa6f4ab57e2b0",
-        "type": "change",
+        "id": "3f42b589a161b9f5",
+        "type": "debug",
         "z": "184c8de33e0963dd",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "humi_max",
-                "tot": "global"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 690,
+        "name": "msg.payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 1400,
+        "wires": []
+    },
+    {
+        "id": "cceb043b5a472af3",
+        "type": "function",
+        "z": "184c8de33e0963dd",
+        "name": "check value",
+        "func": "global.set(\"tvoc_max\",msg.payload);\nreturn global.get(\"tvoc_max\");",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
         "y": 1500,
         "wires": [
-            []
+            [
+                "782feedeb08caef0"
+            ]
         ]
+    },
+    {
+        "id": "782feedeb08caef0",
+        "type": "debug",
+        "z": "184c8de33e0963dd",
+        "name": "msg.payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 1500,
+        "wires": []
     },
     {
         "id": "1df1d187545a05a5",

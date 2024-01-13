@@ -150,7 +150,14 @@ void callback(char* topic, byte* message, unsigned int length) {
 	  //Ensuite, ce même élément est ajouté à la fin de la chaîne "messageTemp" avec
 	  //"messageTemp += (char)message[i];
   }
-  Serial.println();
+  if(topic == "esp32/OLED/affichage"){
+    oled.clearDisplay();
+    oled.setTextSize(1);
+    oled.setCursor(0,0);
+    oled.setTextColor(SSD1306_WHITE);
+    oled.println(messageTemp);
+    oled.display();
+  }
   if(messageTemp=="C"){ //Risque CO2
     r_co2=true;
   }
@@ -235,6 +242,8 @@ void reconnect() {
       clientAir.subscribe("esp32/Mode/lumiere");
       clientAir.subscribe("esp32/Mode/gaz/TVOC");
       clientAir.subscribe("esp32/Mode/gaz/CO2");
+      //affichage ecran subscribe
+      clientAir.subscribe("esp32/OLED/affichage");
     } 
 	// Si la connexion échoue, le code imprime "failed, rc=" suivi de l'état de la connexion avec "client.state()" sur la console série 
    // La fonction se répète jusqu'à ce que la connexion soit établie avec succès.
@@ -413,19 +422,19 @@ void oled_error(bool r_co2,bool r_pression, bool r_temp, bool r_tvoc, bool r_hum
   oled.setCursor(0,0);
   oled.setTextColor(SSD1306_WHITE);
   if(r_co2){
-    oled.println("Danger CO2 , Aerer la pièce imediatement!! ");
+    oled.println("Danger CO2 , Aerer la piece imediatement!! ");
   }
   if(r_humi){
-    oled.println("Humidité importante, aérer la pièce ! ");
+    oled.println("Humidite importante, aerer la piece ! ");
   }
   if(r_pression){
     oled.println("Danger, Pression trop importante !! ");
   }
   if(r_temp){
-    oled.println("Attention température trop élevée !");
+    oled.println("Attention température trop elevee !");
   }
   if(r_tvoc){
-    oled.println("Danger TVOC , Aerer la pièce imediatement !! ");   
+    oled.println("Danger TVOC , Aerer la piece imediatement !! ");   
   }
   oled.display();
 }
