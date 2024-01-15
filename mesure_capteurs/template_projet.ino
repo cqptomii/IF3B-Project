@@ -150,13 +150,14 @@ void callback(char* topic, byte* message, unsigned int length) {
 	  //Ensuite, ce même élément est ajouté à la fin de la chaîne "messageTemp" avec
 	  //"messageTemp += (char)message[i];
   }
-  if(topic == "esp32/OLED/affichage"){
+  if(strcmp(topic,"esp32/OLED/affichage")==0){
     oled.clearDisplay();
     oled.setTextSize(1);
     oled.setCursor(0,0);
     oled.setTextColor(SSD1306_WHITE);
     oled.println(messageTemp);
     oled.display();
+    delay(10000);
   }
   if(messageTemp=="C"){ //Risque CO2
     r_co2=true;
@@ -171,7 +172,7 @@ void callback(char* topic, byte* message, unsigned int length) {
     r_temp=true;
   }
   if(messageTemp=="H"){ // Risque Humidité
-    r_temp=true;
+    r_humi=true;
   }
   if(messageTemp=="c"){
     r_co2=false;
